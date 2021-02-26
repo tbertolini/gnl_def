@@ -6,7 +6,7 @@
 /*   By: tbertoli <tbertoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 18:53:35 by tbertoli          #+#    #+#             */
-/*   Updated: 2021/02/23 19:54:37 by tbertoli         ###   ########.fr       */
+/*   Updated: 2021/02/26 20:37:29 by tbertoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,8 @@ void	ft_libera(char **s1)
 void	ft_swoppa(char **riga_add, char *buffer_add)
 {
 	char *temp;
-	//printf("è qui che crashi?");
+
 	temp = ft_strjoin(*riga_add, buffer_add);
-	//printf("riga contiene:\t%s\nbuffer contiene:\t%s\ntemp:\t%s\n",*riga_add,buffer_add, temp);
 	ft_libera(riga_add);
 	*riga_add = ft_strdup(temp);
 	ft_memset(buffer_add, 0, ft_strlen(buffer_add));
@@ -69,43 +68,35 @@ int		get_next_line(int fd, char **line)
 	char buffer[BUFFER_SIZE + 1];
 	char *punt;
 	char *riga;
-	static char linea_successiva[BUFFER_SIZE + 1];
+	static char successiva[BUFFER_SIZE + 1];
 
+	buffer[BUFFER_SIZE] = 0;
 	riga = NULL;
-	letti = BUFFER_SIZE ;
-	eof = 0;
-	if (fd <= 0 || !line || BUFFER_SIZE <= 0)
+	letti = BUFFER_SIZE;
+	eof = 1;
+	if (fd < 0 || !line || BUFFER_SIZE <= 0)
 		return (-1);
-	if (linea_successiva[0] != '\0')
+	if (successiva[0] != '\0')
+		letti = ft_strlcpy(buffer, successiva, ft_strlen(successiva) + 1);
+	ft_memset(successiva, 0, ft_strlen(successiva));
+	while ((punt = ft_strchr(buffer, '\n')) == NULL)
 	{
-		letti = ft_strlcpy(buffer, linea_successiva, ft_strlen(linea_successiva) + 1);
-		ft_memset(linea_successiva, 0, ft_strlen(linea_successiva));
-	}
-	while ((punt = ft_strchr(buffer, '\n')) == NULL && eof == 0)
-	{
-		buffer[letti] = 0;
-		ft_swoppa(&riga ,buffer);
-		if ((letti = read(fd, buffer, BUFFER_SIZE))  == 0)
-			eof = 1;
-	}
-	if (eof == 1 && !(punt = ft_strchr(buffer, '\n')))  //cosa succede se c'è eof ma c'è anche endline??
-	{
-		buffer[letti] = 0;
 		ft_swoppa(&riga, buffer);
-		*line = ft_strdup(riga);
-		ft_libera(&riga);
-		return 0;
+		if ((letti = read(fd, buffer, BUFFER_SIZE)) == 0)
+			break ;
 	}
-	else //((punt = ft_strchr(buffer, '\n')))
+	if (!punt)
 	{
-		buffer[letti] = 0;
-		ft_strlcpy(linea_successiva, punt + 1, ft_strlen(punt) + 1);
+		ft_swoppa(&riga, buffer);
+		eof = 0;
+	}
+	else
+	{
+		ft_strlcpy(successiva, punt + 1, ft_strlen(punt) + 1);
 		*punt = 0;
 		ft_swoppa(&riga, buffer);
 	}
-	//else
-	//	return (-1);
 	*line = ft_strdup(riga);
 	ft_libera(&riga);
-	return (1);			
+	return (eof);
 }

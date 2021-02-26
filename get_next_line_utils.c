@@ -6,13 +6,11 @@
 /*   By: tbertoli <tbertoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 15:02:51 by tbertoli          #+#    #+#             */
-/*   Updated: 2021/02/23 19:54:40 by tbertoli         ###   ########.fr       */
+/*   Updated: 2021/02/26 18:12:24 by tbertoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 {
