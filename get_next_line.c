@@ -12,6 +12,34 @@
 
 #include "get_next_line.h"
 
+char	*ft_strdup(const char *s1)
+{
+	size_t	len;
+	char	*s2;
+
+	len = ft_strlen(s1) + 1;
+	s2 = (char *)malloc(sizeof(char) * len);
+	if (s2 == NULL)
+		return (NULL);
+	ft_strlcpy(s2, s1, len);
+	return (s2);
+}
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	n;
+	char	*pchar;
+
+	n = 0;
+	pchar = (char *)str;
+	while (*pchar != 0)
+	{
+		n++;
+		pchar++;
+	}
+	return (n);
+}
+
 void	ft_libera(char **s1)
 {
 	if (*s1)
@@ -22,36 +50,62 @@ void	ft_libera(char **s1)
 	}
 }
 
+void	ft_swoppa(char **riga_add, char *buffer_add)
+{
+	char *temp;
+	//printf("è qui che crashi?");
+	temp = ft_strjoin(*riga_add, buffer_add);
+	//printf("riga contiene:\t%s\nbuffer contiene:\t%s\ntemp:\t%s\n",*riga_add,buffer_add, temp);
+	ft_libera(riga_add);
+	*riga_add = ft_strdup(temp);
+	ft_memset(buffer_add, 0, ft_strlen(buffer_add));
+	ft_libera(&temp);
+}
+
 int		get_next_line(int fd, char **line)
 {
-	int			ret;
-	int			ck;
-	char		*temp;
-	char		*riga;
-	char		buffer[BUFFER_SIZE];
-	static char	prox_linea[BUFFER_SIZE];
+	size_t letti;
+	int eof;
+	char buffer[BUFFER_SIZE + 1];
+	char *punt;
+	char *riga;
+	static char linea_successiva[BUFFER_SIZE + 1];
 
-	ret = 1;
-	ck = 0;
-	if (fd < 0 || !line || BUFFER_SIZE <= 0)
+	riga = NULL;
+	letti = BUFFER_SIZE ;
+	eof = 0;
+	if (fd <= 0 || !line || BUFFER_SIZE <= 0)
 		return (-1);
-	while (!ft_strchr(buffer, '\n') && (ck = read(fd, buffer, BUFFER_SIZE)) > 1)
+	if (linea_successiva[0] != '\0')
 	{
-		buffer[ck] = 0;
-		temp = ft_strjoin(riga, buffer);
+		letti = ft_strlcpy(buffer, linea_successiva, ft_strlen(linea_successiva) + 1);
+		ft_memset(linea_successiva, 0, ft_strlen(linea_successiva));
+	}
+	while ((punt = ft_strchr(buffer, '\n')) == NULL && eof == 0)
+	{
+		buffer[letti] = 0;
+		ft_swoppa(&riga ,buffer);
+		if ((letti = read(fd, buffer, BUFFER_SIZE))  == 0)
+			eof = 1;
+	}
+	if (eof == 1 && !(punt = ft_strchr(buffer, '\n')))  //cosa succede se c'è eof ma c'è anche endline??
+	{
+		buffer[letti] = 0;
+		ft_swoppa(&riga, buffer);
+		*line = ft_strdup(riga);
 		ft_libera(&riga);
-		riga = ft_strdup(temp);
-		ft_memset(buffer, 0, ft_strlen(buffer));
-		ft_libera(&temp);
+		return 0;
 	}
-	if (ck == 0)
-		ret = 0;
-	else if (ck > 0)
+	else //((punt = ft_strchr(buffer, '\n')))
 	{
-		//aggiungi il resto della linea a riga e metti il resto in prox_linea, in modo puilito!!
-		// 
+		buffer[letti] = 0;
+		ft_strlcpy(linea_successiva, punt + 1, ft_strlen(punt) + 1);
+		*punt = 0;
+		ft_swoppa(&riga, buffer);
 	}
+	//else
+	//	return (-1);
 	*line = ft_strdup(riga);
 	ft_libera(&riga);
-	return (ret);
+	return (1);			
 }

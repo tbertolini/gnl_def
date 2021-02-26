@@ -12,33 +12,7 @@
 
 #include "get_next_line.h"
 
-char	*ft_strdup(const char *s1)
-{
-	size_t	len;
-	char	*s2;
 
-	len = ft_strlen(s1) + 1;
-	s2 = (char *)malloc(sizeof(char) * len);
-	if (s2 == NULL)
-		return (NULL);
-	ft_strlcpy(s2, s1, len);
-	return (s2);
-}
-
-size_t	ft_strlen(const char *str)
-{
-	size_t	n;
-	char	*pchar;
-
-	n = 0;
-	pchar = (char *)str;
-	while (*pchar != 0)
-	{
-		n++;
-		pchar++;
-	}
-	return (n);
-}
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 {
