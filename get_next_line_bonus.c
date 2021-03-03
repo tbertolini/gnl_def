@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tbertoli <tbertoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/23 18:53:35 by tbertoli          #+#    #+#             */
-/*   Updated: 2021/03/03 20:28:44 by tbertoli         ###   ########.fr       */
+/*   Created: 2021/03/03 20:32:31 by tbertoli          #+#    #+#             */
+/*   Updated: 2021/03/03 20:38:09 by tbertoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,43 +63,43 @@ void	ft_swoppa(char **riga_add, char *buffer_add)
 
 int		get_next_line(int fd, char **line)
 {
-	static char	bf[BUFFER_SIZE + 1];
+	static char	bf[1000][BUFFER_SIZE + 1];
 	char		temp[BUFFER_SIZE];
 	char		*p;
 	int			n;
 
-	bf[BUFFER_SIZE] = 0;
+	bf[fd][BUFFER_SIZE] = 0;
 	p = NULL;
 	n = 0;
 	if (fd < 0 || !line || BUFFER_SIZE <= 0)
 		return (-1);
 	ft_libera(line);
-	while (!(p = ft_strchr(bf, '\n')))
+	while (!(p = ft_strchr(bf[fd], '\n')))
 	{
-		ft_swoppa(line, bf);
-		if (((n = read(fd, bf, BUFFER_SIZE))) == 0 && (ft_strlen(bf) == 0))
+		ft_swoppa(line, bf[fd]);
+		if (((n = read(fd, bf[fd], BUFFER_SIZE))) == 0 && (ft_strlen(bf[fd]) == 0))
 			return (0);
-		else if (!(p = ft_strchr(bf, '\n')))
+		else if (!(p = ft_strchr(bf[fd], '\n')))
 		{
-			ft_swoppa(line, bf);
+			ft_swoppa(line, bf[fd]);
 		}
 		else if (n < BUFFER_SIZE && !p)
 		{
-			ft_swoppa(line, bf);
+			ft_swoppa(line, bf[fd]);
 			break ;
 		}
 		else if (p)
 		{
 			*p = '\0';
-			ft_swoppa(line, bf);
+			ft_swoppa(line, bf[fd]);
 			ft_strlcpy(temp, p + 1, ft_strlen(p + 1) + 1);
-			ft_memset(bf, 0, BUFFER_SIZE);
-			ft_strlcpy(bf, temp, BUFFER_SIZE);
+			ft_memset(bf[fd], 0, BUFFER_SIZE);
+			ft_strlcpy(bf[fd], temp, BUFFER_SIZE);
 			break ;
 		}
 		else
 			return (-1);
-		ft_memset(bf, 0, BUFFER_SIZE);
+		ft_memset(bf[fd], 0, BUFFER_SIZE);
 	}
 	return (1);
 }
