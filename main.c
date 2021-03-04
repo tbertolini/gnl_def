@@ -11,13 +11,9 @@ int main()
 	int ret;
 	ret = 0;
 	stringa = NULL;
-	fd = open("test.txt", O_RDONLY);
-	while ((contr = get_next_line(fd, &stringa)) > 0)
-		printf("------> new_line = %s\n\n\n", stringa);
-	//ret = get_next_line(fd, &stringa);
-	//printf("------> new_line = %s\n %d \n\n", stringa, ret);
-	//ret = get_next_line(fd, &stringa);
-	printf("------> new_line = %s\n %d \n\n", stringa, ret);
-	
+	fd = open("test_file17", O_RDONLY);
+	while ((ret = get_next_line(fd, &stringa)) > 0)
+		printf("%s\n", stringa);
+	printf("%s", stringa);
 	return 0;
 }

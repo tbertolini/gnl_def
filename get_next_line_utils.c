@@ -6,13 +6,13 @@
 /*   By: tbertoli <tbertoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 15:02:51 by tbertoli          #+#    #+#             */
-/*   Updated: 2021/02/26 18:12:24 by tbertoli         ###   ########.fr       */
+/*   Updated: 2021/03/04 13:13:16 by tbertoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlcpy(char *dest, const char *src, size_t size)
+size_t		ft_strlcpy(char *dest, const char *src, size_t size)
 {
 	size_t n;
 
@@ -34,7 +34,7 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	return (n);
 }
 
-char	*ft_strchr(const char *str, int c)
+char		*ft_strchr(const char *str, int c)
 {
 	size_t	i;
 
@@ -94,7 +94,7 @@ size_t		ft_strlcat(char *dst, const char *src, size_t size)
 	return (dest_length + src_length);
 }
 
-void	*ft_memset(void *b, int c, size_t len)
+void		*ft_memset(void *b, int c, size_t len)
 {
 	size_t n;
 

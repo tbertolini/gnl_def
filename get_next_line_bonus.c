@@ -6,11 +6,11 @@
 /*   By: tbertoli <tbertoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:32:31 by tbertoli          #+#    #+#             */
-/*   Updated: 2021/03/04 10:27:26 by tbertoli         ###   ########.fr       */
+/*   Updated: 2021/03/04 13:13:34 by tbertoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strdup(const char *s1)
 {

@@ -6,7 +6,7 @@
 /*   By: tbertoli <tbertoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 18:53:35 by tbertoli          #+#    #+#             */
-/*   Updated: 2021/03/04 09:48:42 by tbertoli         ###   ########.fr       */
+/*   Updated: 2021/03/04 13:14:03 by tbertoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,5 @@ int		get_next_line(int fd, char **line)
 		if ((n = ft_swoppa(line, bf)) != 0)
 			break ;
 	}
-	return (n || (b_letti == BUFFER_SIZE));
+	return (n || (b_letti > 0));
 }
