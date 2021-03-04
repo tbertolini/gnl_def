@@ -21,40 +21,43 @@ void	ft_swoppa(char **riga_add, char *buffer_add)
 
 int		get_next_line(int fd, char **line)
 {
-	size_t letti;
-	int eof;
-	char buffer[BUFFER_SIZE + 1];
-	char *punt;
-	char *riga;
-	static char successiva[BUFFER_SIZE + 1];
+	static char	bf[BUFFER_SIZE + 1];
+	char		temp[BUFFER_SIZE];
+	char		*p;
+	int			n;
 
-	buffer[BUFFER_SIZE] = 0;
-	riga = NULL;
-	letti = BUFFER_SIZE;
-	eof = 1;
+	bf[BUFFER_SIZE] = 0;
+	p = NULL;
+	n = 0;
 	if (fd < 0 || !line || BUFFER_SIZE <= 0)
 		return (-1);
-	if (successiva[0] != '\0')
-		letti = ft_strlcpy(buffer, successiva, ft_strlen(successiva) + 1);
-	ft_memset(successiva, 0, ft_strlen(successiva));
-	while ((punt = ft_strchr(buffer, '\n')) == NULL)
+	ft_libera(line);
+	while (!(p = ft_strchr(bf, '\n')))
 	{
-		ft_swoppa(&riga, buffer);
-		if ((letti = read(fd, buffer, BUFFER_SIZE)) == 0)
+		ft_swoppa(line, bf);
+		if (((n = read(fd, bf, BUFFER_SIZE))) == 0 && (ft_strlen(bf) == 0))
+			return (0);
+		else if (!(p = ft_strchr(bf, '\n')))
+		{
+			ft_swoppa(line, bf);
+		}
+		else if (n < BUFFER_SIZE && !p)
+		{
+			ft_swoppa(line, bf);
 			break ;
+		}
+		else if (p)
+		{
+			*p = '\0';
+			ft_swoppa(line, bf);
+			ft_strlcpy(temp, p + 1, ft_strlen(p + 1) + 1);
+			ft_memset(bf, 0, BUFFER_SIZE);
+			ft_strlcpy(bf, temp, BUFFER_SIZE);
+			break ;
+		}
+		else
+			return (-1);
+		ft_memset(bf, 0, BUFFER_SIZE);
 	}
-	if (!punt)
-	{
-		ft_swoppa(&riga, buffer);
-		eof = 0;
-	}
-	else
-	{
-		ft_strlcpy(successiva, punt + 1, ft_strlen(punt) + 1);
-		*punt = 0;
-		ft_swoppa(&riga, buffer);
-	}
-	*line = ft_strdup(riga);
-	ft_libera(&riga);
-	return (eof);
+	return (1);
 }

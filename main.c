@@ -9,8 +9,8 @@ int main()
 	char *stringa;
 	int fd;
 	int ret;
+	ret = 0;
 	stringa = NULL;
-	printf("------> new_line = %s\n\n\n", stringa);
 	fd = open("test.txt", O_RDONLY);
 	while ((contr = get_next_line(fd, &stringa)) > 0)
 		printf("------> new_line = %s\n\n\n", stringa);

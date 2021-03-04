@@ -6,18 +6,19 @@
 /*   By: tbertoli <tbertoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:39:48 by tbertoli          #+#    #+#             */
-/*   Updated: 2021/03/03 20:40:29 by tbertoli         ###   ########.fr       */
+/*   Updated: 2021/03/04 10:00:23 by tbertoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <unistd.h>
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+# include <limits.h>
+# include <string.h>
+# include <stdio.h>
+# include <fcntl.h>
+# include <stdlib.h>
+# include <unistd.h>
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
 # endif

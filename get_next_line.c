@@ -6,7 +6,7 @@
 /*   By: tbertoli <tbertoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 18:53:35 by tbertoli          #+#    #+#             */
-/*   Updated: 2021/03/03 20:28:44 by tbertoli         ###   ########.fr       */
+/*   Updated: 2021/03/04 09:48:42 by tbertoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,56 +50,52 @@ void	ft_libera(char **s1)
 	}
 }
 
-void	ft_swoppa(char **riga_add, char *buffer_add)
+int		ft_swoppa(char **riga_add, char *buffer_add)
 {
+	char *p;
 	char *temp;
 
+	if ((p = ft_strchr(buffer_add, '\n')))
+		*p = 0;
 	temp = ft_strjoin(*riga_add, buffer_add);
 	ft_libera(riga_add);
 	*riga_add = ft_strdup(temp);
-	ft_memset(buffer_add, 0, ft_strlen(buffer_add));
+	if (p == NULL)
+	{
+		ft_memset(buffer_add, 0, ft_strlen(buffer_add));
+		ft_libera(&temp);
+		return (0);
+	}
 	ft_libera(&temp);
+	temp = ft_strdup(p + 1);
+	ft_memset(buffer_add, 0, BUFFER_SIZE);
+	ft_strlcpy(buffer_add, temp, ft_strlen(temp) + 1);
+	ft_libera(&temp);
+	return (1);
 }
 
 int		get_next_line(int fd, char **line)
 {
 	static char	bf[BUFFER_SIZE + 1];
-	char		temp[BUFFER_SIZE];
-	char		*p;
 	int			n;
+	int			b_letti;
 
 	bf[BUFFER_SIZE] = 0;
-	p = NULL;
 	n = 0;
-	if (fd < 0 || !line || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= 1000 || !line || BUFFER_SIZE <= 0)
 		return (-1);
-	ft_libera(line);
-	while (!(p = ft_strchr(bf, '\n')))
+	if (bf[0] == '\n')
 	{
-		ft_swoppa(line, bf);
-		if (((n = read(fd, bf, BUFFER_SIZE))) == 0 && (ft_strlen(bf) == 0))
-			return (0);
-		else if (!(p = ft_strchr(bf, '\n')))
-		{
-			ft_swoppa(line, bf);
-		}
-		else if (n < BUFFER_SIZE && !p)
-		{
-			ft_swoppa(line, bf);
-			break ;
-		}
-		else if (p)
-		{
-			*p = '\0';
-			ft_swoppa(line, bf);
-			ft_strlcpy(temp, p + 1, ft_strlen(p + 1) + 1);
-			ft_memset(bf, 0, BUFFER_SIZE);
-			ft_strlcpy(bf, temp, BUFFER_SIZE);
-			break ;
-		}
-		else
-			return (-1);
-		ft_memset(bf, 0, BUFFER_SIZE);
+		ft_strlcpy(bf, bf + 1, BUFFER_SIZE);
+		*line = ft_strdup("");
+		return (1);
 	}
-	return (1);
+	ft_libera(line);
+	n = ft_swoppa(line, bf);
+	while ((b_letti = read(fd, bf, BUFFER_SIZE)) > 0)
+	{
+		if ((n = ft_swoppa(line, bf)) != 0)
+			break ;
+	}
+	return (n || (b_letti == BUFFER_SIZE));
 }
