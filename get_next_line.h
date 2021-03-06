@@ -21,11 +21,12 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 50
 # endif
 
-int		get_next_line(int fd, char **line);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
+int     ft_swoppa(char **dest, char *source, int c);
+int		get_next_line(int fd, char **line);
 char	*ft_strdup(const char *s1);
 char	*ft_strchr(const char *str, int c);
 size_t	ft_strlen(const char *str);

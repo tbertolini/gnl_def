@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tbertoli <tbertoli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/03 20:32:31 by tbertoli          #+#    #+#             */
-/*   Updated: 2021/03/04 13:13:34 by tbertoli         ###   ########.fr       */
+/*   Created: 2021/02/23 18:53:35 by tbertoli          #+#    #+#             */
+/*   Updated: 2021/03/04 13:14:03 by tbertoli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,62 +40,57 @@ size_t	ft_strlen(const char *str)
 	return (n);
 }
 
-void	ft_libera(char **s1)
+int		ft_libera(char **s1)
 {
 	if (*s1)
 	{
 		ft_memset(*s1, 0, ft_strlen(*s1));
 		free(*s1);
 		*s1 = NULL;
+		return (1);
 	}
+	return (0);
 }
 
-int		ft_swoppa(char **riga_add, char *buffer_add)
+int	ft_swoppa(char **dest, char *source, int c)
 {
-	char *p;
-	char *temp;
+	char	*temp;
 
-	if ((p = ft_strchr(buffer_add, '\n')))
-		*p = 0;
-	temp = ft_strjoin(*riga_add, buffer_add);
-	ft_libera(riga_add);
-	*riga_add = ft_strdup(temp);
-	if (p == NULL)
-	{
-		ft_memset(buffer_add, 0, ft_strlen(buffer_add));
-		ft_libera(&temp);
-		return (0);
-	}
+	source[c] = 0;
+	temp = ft_strjoin(*dest, source);
+	ft_libera(dest);
+	*dest = ft_strdup(temp);
 	ft_libera(&temp);
-	temp = ft_strdup(p + 1);
-	ft_memset(buffer_add, 0, BUFFER_SIZE);
-	ft_strlcpy(buffer_add, temp, ft_strlen(temp) + 1);
-	ft_libera(&temp);
-	return (1);
+	if (ft_strchr(*dest, '\n'))
+		return (1);
+	return (0);
+	
 }
 
 int		get_next_line(int fd, char **line)
 {
-	static char	bf[MAX_INPUT][BUFFER_SIZE + 1];
-	int			n;
-	int			b_letti;
+	static char *eccedenza[MAX_INPUT];
+	char		*temp;
+	char		*p;
+	int			c;
+	char		bf[BUFFER_SIZE + (c = 1)];
 
-	bf[fd][BUFFER_SIZE] = 0;
-	n = 0;
+	temp = NULL;
 	if (fd < 0 || fd >= 1000 || !line || BUFFER_SIZE <= 0)
 		return (-1);
-	if (bf[fd][0] == '\n')
-	{
-		ft_strlcpy(bf[fd], bf[fd] + 1, BUFFER_SIZE);
-		*line = ft_strdup("");
-		return (1);
-	}
-	ft_libera(line);
-	n = ft_swoppa(line, bf[fd]);
-	while ((b_letti = read(fd, bf[fd], BUFFER_SIZE)) > 0)
-	{
-		if ((n = ft_swoppa(line, bf[fd])) != 0)
+	if (eccedenza[fd] == NULL)
+		eccedenza[fd] = ft_strdup("");
+	while((c = read(fd, bf, BUFFER_SIZE)) > 0)
+		if (ft_swoppa(&eccedenza[fd], bf, c) == 1)
 			break ;
+	if ((p = ft_strchr(eccedenza[fd], '\n')))
+	{
+		*p = 0;
+		temp = ft_strdup(p + 1);
 	}
-	return (n || (b_letti == BUFFER_SIZE));
+	*line = ft_strdup(eccedenza[fd]);
+	ft_libera(&eccedenza[fd]);
+	eccedenza[fd] = (temp != NULL) ? ft_strdup(temp) : NULL;
+	ft_libera(&temp);
+	return (c > 0 || eccedenza[fd] != NULL);
 }

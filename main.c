@@ -11,7 +11,7 @@ int main()
 	int ret;
 	ret = 0;
 	stringa = NULL;
-	fd = open("test_file17", O_RDONLY);
+	fd = open("empty", O_RDONLY);
 	while ((ret = get_next_line(fd, &stringa)) > 0)
 		printf("%s\n", stringa);
 	printf("%s", stringa);

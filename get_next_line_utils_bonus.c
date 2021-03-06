@@ -34,7 +34,28 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	return (n);
 }
 
-char	*ft_strchr(const char *str, int c)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	i;
+	char	*ptr;
+
+	i = 0;
+	if (!s || (long int)len < 0)
+		return (NULL);
+	ptr = (char *)malloc(len + 1);
+	if (ptr == NULL)
+		return (NULL);
+	while (start < ft_strlen(s) && i < len)
+	{
+		ptr[i] = s[start];
+		i++;
+		start++;
+	}
+	ptr[i] = '\0';
+	return (ptr);
+}
+
+char		*ft_strchr(const char *str, int c)
 {
 	size_t	i;
 
@@ -94,7 +115,7 @@ size_t		ft_strlcat(char *dst, const char *src, size_t size)
 	return (dest_length + src_length);
 }
 
-void	*ft_memset(void *b, int c, size_t len)
+void		*ft_memset(void *b, int c, size_t len)
 {
 	size_t n;
 

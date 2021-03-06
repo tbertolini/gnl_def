@@ -52,45 +52,41 @@ int		ft_libera(char **s1)
 	return (0);
 }
 
-int	ft_swoppa(char **dest, char *source, int c)
-{
-	char	*temp;
-
-	source[c] = 0;
-	temp = ft_strjoin(*dest, source);
-	ft_libera(dest);
-	*dest = ft_strdup(temp);
-	ft_libera(&temp);
-	if (ft_strchr(*dest, '\n'))
-		return (1);
-	return (0);
-	
-}
-
 int		get_next_line(int fd, char **line)
 {
 	static char *eccedenza;
 	char		*temp;
 	char		*p;
+	char		bf[BUFFER_SIZE + 1];
 	int			c;
-	char		bf[BUFFER_SIZE + (c = 1)];
 
 	temp = NULL;
+	c = 1;
 	if (fd < 0 || fd >= 1000 || !line || BUFFER_SIZE <= 0)
 		return (-1);
-	if (eccedenza == NULL)
-		eccedenza = ft_strdup("");
 	while((c = read(fd, bf, BUFFER_SIZE)) > 0)
-		if (ft_swoppa(&eccedenza, bf, c) == 1)
-			break ;
-	if ((p = ft_strchr(eccedenza, '\n')))
 	{
-		*p = 0;
-		temp = ft_strdup(p + 1);
+		bf[c] = 0;
+		temp = ft_strjoin(eccedenza, bf);
+		ft_libera(&eccedenza);
+		eccedenza = ft_strdup(temp);
+		ft_libera(&temp);
+		if ((p = ft_strchr(eccedenza, '\n')))
+			break ;
 	}
-	*line = ft_strdup(eccedenza);
-	ft_libera(&eccedenza);
-	eccedenza = (temp != NULL) ? ft_strdup(temp) : NULL;
-	ft_libera(&temp);
+	if (c > 0)
+	{
+		*line = ft_substr(eccedenza, 0, (p - eccedenza));
+		temp = ft_strdup(p + 1);
+		ft_libera(&eccedenza);
+		eccedenza = ft_strdup(temp);
+		ft_libera(&temp);
+	}
+	else if (c == 0)
+	{
+		*line = ft_strdup(eccedenza);
+		ft_libera(&eccedenza);
+		eccedenza = NULL;
+	}
 	return (c > 0 || eccedenza != NULL);
 }

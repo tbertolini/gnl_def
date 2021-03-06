@@ -12,26 +12,25 @@
 
 #include "get_next_line.h"
 
-size_t		ft_strlcpy(char *dest, const char *src, size_t size)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t n;
+	size_t	i;
+	char	*ptr;
 
-	if (!(src))
-		return (0);
-	if (!(dest) || size == 0)
-		return (ft_strlen(src));
-	n = 0;
-	while (src[n] && n < (size - 1))
+	i = 0;
+	if (!s || (long int)len < 0)
+		return (NULL);
+	ptr = (char *)malloc(len + 1);
+	if (ptr == NULL)
+		return (NULL);
+	while (start < ft_strlen(s) && i < len)
 	{
-		dest[n] = (char)src[n];
-		n++;
+		ptr[i] = s[start];
+		i++;
+		start++;
 	}
-	dest[n] = 0;
-	while (src[n])
-	{
-		n++;
-	}
-	return (n);
+	ptr[i] = '\0';
+	return (ptr);
 }
 
 char		*ft_strchr(const char *str, int c)
@@ -107,4 +106,26 @@ void		*ft_memset(void *b, int c, size_t len)
 		n++;
 	}
 	return (b);
+}
+
+size_t	ft_strlcpy(char *dest, const char *src, size_t size)
+{
+	size_t n;
+
+	if (!(src))
+		return (0);
+	if (!(dest) || size == 0)
+		return (ft_strlen(src));
+	n = 0;
+	while (src[n] && n < (size - 1))
+	{
+		dest[n] = (char)src[n];
+		n++;
+	}
+	dest[n] = 0;
+	while (src[n])
+	{
+		n++;
+	}
+	return (n);
 }
